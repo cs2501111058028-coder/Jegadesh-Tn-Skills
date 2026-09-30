@@ -1,183 +1,272 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduGenie - Google Gemini Powered Learning Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
 
-{% block title %}
-Create a Comic · ComicCraft
-{% endblock %}
-
-
-{% block content %}
-
-<section class="hero">
-
-    <p class="eyebrow">
-        Gemini + Diffusion
-    </p>
-
-    <h1>
-        Turn an idea into a five-panel comic.
-    </h1>
-
-    <p class="hero-copy">
-
-        Describe your story, character,
-        world, tone, and art direction.
-
-        ComicCraft builds the outline,
-        narration, illustrations,
-        and PDF.
-
-    </p>
-
-</section>
-
-
-<form
-    class="card form-card"
-    method="post"
-    action="/generate"
-    data-generation-form
->
-
-
-    <!-- STORY PROMPT -->
-
-    <label>
-
-        Story Prompt
-
-        <textarea
-            name="story_prompt"
-            rows="5"
-            required
-            placeholder="A brave fox discovers a glowing door in an enchanted forest..."
-        ></textarea>
-
-    </label>
-
-
-    <!-- CHARACTER + SETTING -->
-
-    <div class="grid two">
-
-        <label>
-
-            Main Character Name
-
-            <input
-                name="character_name"
-                required
-                maxlength="80"
-                placeholder="Fenn"
-            >
-
-        </label>
-
-
-        <label>
-
-            Setting
-
-            <select name="setting">
-
-                <option>
-                    enchanted forest
-                </option>
-
-                <option>
-                    school
-                </option>
-
-                <option>
-                    space
-                </option>
-
-                <option>
-                    city
-                </option>
-
-            </select>
-
-        </label>
-
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-logo">🧞‍♂️</div>
+        <div>
+          <h1 class="brand-title">EduGenie</h1>
+          <p class="brand-subtitle">Gemini Powered Intelligent Learning Assistant</p>
+        </div>
+      </div>
+      <div class="nav-badges">
+        <div id="mode-badge" class="badge {{ 'badge-demo' if is_demo_mode else 'badge-live' }}">
+          <span class="badge-dot"></span>
+          <span id="mode-text">{{ "Demo Mode (Offline)" if is_demo_mode else "Live Gemini AI" }}</span>
+        </div>
+        <div id="health-badge" class="badge badge-health">
+          <span class="badge-dot dot-green"></span>
+          <span>System Healthy</span>
+        </div>
+      </div>
     </div>
+  </header>
 
-
-    <!-- TONE + STYLE -->
-
-    <div class="grid two">
-
-        <label>
-
-            Story Tone
-
-            <select name="tone">
-
-                <option>
-                    light-hearted
-                </option>
-
-                <option selected>
-                    dramatic
-                </option>
-
-                <option>
-                    poetic
-                </option>
-
-                <option>
-                    funny
-                </option>
-
-            </select>
-
-        </label>
-
-
-        <label>
-
-            Art Style
-
-            <select name="art_style">
-
-                <option>
-                    anime
-                </option>
-
-                <option>
-                    pixel art
-                </option>
-
-                <option selected>
-                    comic book
-                </option>
-
-                <option>
-                    realistic
-                </option>
-
-            </select>
-
-        </label>
-
+  <!-- Hero Section -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <h2>Transform How You Learn with Generative AI</h2>
+      <p>Ask questions, simplify complex scientific concepts, summarize dense study passages, test yourself with instant quizzes, and generate customized career roadmaps.</p>
     </div>
+  </section>
 
+  <!-- Main Container with 5 Feature Cards -->
+  <main class="main-container">
 
-    <button
-        class="button primary"
-        type="submit"
-    >
+    <!-- Card 1: Smart Q&A -->
+    <section class="feature-card" id="card-qa">
+      <div class="card-header">
+        <div class="card-icon bg-blue">💬</div>
+        <div>
+          <h3>Smart Question & Answer</h3>
+          <p>Get precise, accurate, and concise educational answers</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="form-qa" class="feature-form">
+          <div class="form-group">
+            <label for="qa-input">Enter your question:</label>
+            <div class="input-with-action">
+              <input type="text" id="qa-input" placeholder="e.g., Which is the largest ocean?" required>
+              <button type="button" class="btn-sample" data-target="qa-input" data-value="Which is the largest ocean?">Sample</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-qa-submit">
+            <span class="btn-text">Ask Question</span>
+            <span class="spinner" id="spinner-qa"></span>
+          </button>
+        </form>
 
-        Generate My Comic
+        <div class="error-banner" id="error-qa"></div>
 
-    </button>
+        <div class="result-box" id="result-qa">
+          <div class="result-header">
+            <span class="result-tag">Answer</span>
+            <span class="result-meta" id="meta-qa"></span>
+          </div>
+          <div class="result-content" id="content-qa"></div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Card 2: Concept Explainer -->
+    <section class="feature-card" id="card-explain">
+      <div class="card-header">
+        <div class="card-icon bg-purple">💡</div>
+        <div>
+          <h3>Concept Explainer</h3>
+          <p>Complex scientific & computing topics made simple for students</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="form-explain" class="feature-form">
+          <div class="form-group">
+            <label for="explain-input">Enter topic or concept:</label>
+            <div class="input-with-action">
+              <input type="text" id="explain-input" placeholder="e.g., quantum computing or binary search algorithm" required>
+              <button type="button" class="btn-sample" data-target="explain-input" data-value="quantum computing">Quantum</button>
+              <button type="button" class="btn-sample" data-target="explain-input" data-value="binary search algorithm">Binary Search</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>AI Backend Model:</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="explain-backend" value="gemini" checked>
+                <span>Google Gemini API (Cloud)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="explain-backend" value="local">
+                <span>LaMini-Flan-T5-783M (Local)</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-explain-submit">
+            <span class="btn-text">Explain Simply</span>
+            <span class="spinner" id="spinner-explain"></span>
+          </button>
+        </form>
 
-    <p
-        class="form-note"
-        data-status
-        aria-live="polite"
-    ></p>
+        <div class="error-banner" id="error-explain"></div>
 
-</form>
+        <div class="result-box" id="result-explain">
+          <div class="result-header">
+            <span class="result-tag">Simplified Explanation</span>
+            <span class="result-meta" id="meta-explain"></span>
+          </div>
+          <div class="result-content markdown-body" id="content-explain"></div>
+        </div>
+      </div>
+    </section>
 
-{% endblock %}
+    <!-- Card 3: Educational Text Summarizer -->
+    <section class="feature-card" id="card-summarize">
+      <div class="card-header">
+        <div class="card-icon bg-emerald">📝</div>
+        <div>
+          <h3>Passage Summarizer</h3>
+          <p>Condense lengthy textbook passages into high-yield revision notes</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="form-summarize" class="feature-form">
+          <div class="form-group">
+            <div class="label-row">
+              <label for="summarize-input">Paste educational passage:</label>
+              <button type="button" class="btn-sample" id="btn-sample-revolution">Load Industrial Revolution Passage</button>
+            </div>
+            <textarea id="summarize-input" rows="6" placeholder="Paste your article or textbook paragraph here..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-summarize-submit">
+            <span class="btn-text">Generate Summary</span>
+            <span class="spinner" id="spinner-summarize"></span>
+          </button>
+        </form>
+
+        <div class="error-banner" id="error-summarize"></div>
+
+        <div class="result-box" id="result-summarize">
+          <div class="result-header">
+            <span class="result-tag">Executive Summary</span>
+            <span class="result-meta" id="meta-summarize"></span>
+          </div>
+          <div class="result-content markdown-body" id="content-summarize"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card 4: Interactive Quiz Generator -->
+    <section class="feature-card" id="card-quiz">
+      <div class="card-header">
+        <div class="card-icon bg-amber">🎯</div>
+        <div>
+          <h3>Interactive Quiz Generator</h3>
+          <p>Generate 3 multiple choice questions with instant score tracking</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="form-quiz" class="feature-form">
+          <div class="form-group">
+            <label for="quiz-input">Enter topic or paste reference text:</label>
+            <div class="input-with-action">
+              <input type="text" id="quiz-input" placeholder="e.g., Pythagoras theorem" required>
+              <button type="button" class="btn-sample" data-target="quiz-input" data-value="Pythagoras theorem">Pythagoras</button>
+              <button type="button" class="btn-sample" data-target="quiz-input" data-value="Photosynthesis">Photosynthesis</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-quiz-submit">
+            <span class="btn-text">Generate 3 MCQs</span>
+            <span class="spinner" id="spinner-quiz"></span>
+          </button>
+        </form>
+
+        <div class="error-banner" id="error-quiz"></div>
+
+        <!-- Dynamic Interactive Quiz Container -->
+        <div class="result-box" id="result-quiz">
+          <div class="result-header">
+            <span class="result-tag">Knowledge Assessment</span>
+            <span class="result-meta" id="meta-quiz"></span>
+          </div>
+
+          <!-- Score summary card -->
+          <div id="quiz-score-banner" class="quiz-score-banner" style="display: none;">
+            <div class="score-pill">
+              <span class="score-icon">🏆</span>
+              <span id="score-text">Score: 0/3 (0%)</span>
+            </div>
+            <p id="score-feedback" class="score-feedback"></p>
+          </div>
+
+          <div id="quiz-container" class="quiz-questions-list"></div>
+
+          <div class="quiz-actions" id="quiz-actions" style="display: none;">
+            <button type="button" class="btn btn-secondary" id="btn-submit-all-quiz">Check All Answers</button>
+            <button type="button" class="btn btn-outline" id="btn-reset-quiz">Reset Quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card 5: Personalized Learning Path -->
+    <section class="feature-card" id="card-learn">
+      <div class="card-header">
+        <div class="card-icon bg-indigo">🗺️</div>
+        <div>
+          <h3>Personalized Learning Roadmap</h3>
+          <p>Step-by-step curriculum from beginner to advanced with timeframes</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="form-learn" class="feature-form">
+          <div class="form-group">
+            <label for="learn-input">Enter target skill or subject:</label>
+            <div class="input-with-action">
+              <input type="text" id="learn-input" placeholder="e.g., SQL, Python, Machine Learning" required>
+              <button type="button" class="btn-sample" data-target="learn-input" data-value="SQL">SQL</button>
+              <button type="button" class="btn-sample" data-target="learn-input" data-value="Python">Python</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-learn-submit">
+            <span class="btn-text">Generate Roadmap</span>
+            <span class="spinner" id="spinner-learn"></span>
+          </button>
+        </form>
+
+        <div class="error-banner" id="error-learn"></div>
+
+        <div class="result-box" id="result-learn">
+          <div class="result-header">
+            <span class="result-tag">Structured Roadmap</span>
+            <span class="result-meta" id="meta-learn"></span>
+          </div>
+          <div class="result-content markdown-body" id="content-learn"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p><strong>EduGenie</strong> — Google Gemini Powered AI Learning Assistant</p>
+      <p class="footer-meta">FastAPI Architecture • Deterministic Offline Fallbacks • HuggingFace Transformers Support</p>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
