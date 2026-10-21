@@ -1,0 +1,23 @@
+#generateImage {
+	margin-top: 12px;
+	background: #293858;
+	color: #ffffff;
+	border: 1px solid #657dbd;
+}
+
+#imageStatus {
+	margin-top: 14px;
+	color: #b8c8ff;
+	line-height: 1.5;
+}
+
+#imageResult {
+	margin-top: 18px;
+	text-align: center;
+}
+
+#imageResult img {
+	display: block;
+	margin: 0 auto;
+	border: 1px solid #657dbd;
+}

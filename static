@@ -1,0 +1,7 @@
+<button id="generateImage" type="button">
+  🎨 Generate Comic Image
+</button>
+
+<p id="imageStatus" role="status"></p>
+
+<div id="imageResult"></div>

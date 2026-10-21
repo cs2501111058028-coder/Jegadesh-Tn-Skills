@@ -1,0 +1,8 @@
+ComicCraft/
+├── main.py
+├── .env
+└── static/
+    ├── index.html
+    ├── style.css
+    ├── script.js
+    └── generated/
